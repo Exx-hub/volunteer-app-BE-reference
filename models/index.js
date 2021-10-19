@@ -1,23 +1,17 @@
-let user = require("./user")
-let questions = require("./questions")
-let comments = require("./comments")
-let trainer = require("./trainer")
-let courses = require("./courses")
-let video = require("./video")
-let sliderData = require("./sliderData")
-let videoBank = require("./videoBank")
-let questionCategories = require("./questionCategories")
-let file = require("./file")
+let admin = require("./admin")
+let appUser = require("./appUser")
+let region = require("./region")
+let municipality = require("./municipality")
+let news = require("./news")
+let bulletin = require("./bulletin")
+let about = require("./about")
 
 module.exports = {
-    user,
-    questions,
-    comments,
-    trainer,
-    courses,
-    video,
-    sliderData,
-    videoBank,
-    questionCategories,
-    file
+    admin,
+    appUser,
+    region,
+    municipality,
+    news,
+    bulletin,
+    about
 }

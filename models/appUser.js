@@ -1,11 +1,17 @@
 var mongoose = require("mongoose")
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
+const appUserSchema = new Schema({
     mobileNo: Number,
     name: String,
     firstName: String,
     lastName: String,
+    address: String,
+    gender: String,
+    birthDate: Date,
+    email: String,
+    regionId: mongoose.Schema.Types.ObjectId,
+    municipalityId: mongoose.Schema.Types.ObjectId,
     sessionInfo: {
         deviceId: {
           type: String
@@ -24,5 +30,6 @@ const userSchema = new Schema({
     timestamps: true
 });
 
-const user = mongoose.model('user', userSchema);
-module.exports = user;
+const appUser = mongoose.model('appUser', appUserSchema);
+
+module.exports = appUser;

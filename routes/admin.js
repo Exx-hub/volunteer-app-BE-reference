@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
-let userController = require("../controllers/user")
-var multer = require('multer')
-var upload = multer()
+let userController = require("../controllers/admin")
 
 router.post('/addUser', userController.addUser);
 

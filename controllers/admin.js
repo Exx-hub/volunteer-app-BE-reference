@@ -23,7 +23,7 @@ const addUser = async (req, res) => {
                 data: data
             })
         } else {
-            res.status(409).json({ success: "false", errorCode: "100", message: "already exist!" })
+            res.status(409).json({ success: "false", errorCode: "1001", message: "User already exist!" })
         }
     } catch (error) {
         console.log(error, "-----------------")
@@ -52,7 +52,7 @@ const login = async (req, res) => {
                 data: data
             })
         } else {
-            res.status(500).json({ error: 1, message: "incorrect mobile or password!" })
+            res.status(500).json({ success: "false", errorCode: "1000", message: "Invalid username or password!" })
         }
     } catch (error) {
         console.log(error, "-----------------")
@@ -62,32 +62,33 @@ const login = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        let data = await models.user.update({ _id: req.params.userId }, req.body, {
-            "_id": 1,
-            "username": 1,
-            "name": 1,
-            "password": 1
-        }).lean();
-        //res.json({ error: 0, data })
-        if(data){
+        let userExist = await models.user.findOne({ username: req.body.username })
+        let encryptedPassword = await bcrypt.hash(req.body.password, parseInt(process.env.saltRounds))
+        if (userExist) {
+            req.body.name = req.body.firstName + ' ' + req.body.lastName;
+            req.body.password = encryptedPassword;
+            let data = await models.user.create(req.body)
+            let data = await models.user.update({ _id: req.params.userId }, req.body)
             res.json({ success: "true", data })
-        }else{
-            return Promise.reject({errorCode:'1000', data})
+        } else {
+            res.status(409).json({ success: "false", errorCode: "1002", message: "user doesn't exists!" })
         }
     } catch (error) {
         console.log(error, "-----------------")
-        //res.status(500).json({ error: 1, data: error })
-        return Promise.reject({errorCode:'1000'})
+        res.status(500).json({ success: "false", data: error })
     }
 }
 
 const deleteUser = async (req, res) => {
     try {
-        let data = await models.user.deleteOne({ _id: req.params.userId })
-        //res.json({ error: 0, data })
-        res.json({
-            success: "true"
-        })
+        let userExist = await models.user.findOne({ username: req.body.username })
+        if (userExist) {
+            let data = await models.user.deleteOne({ _id: req.params.userId })
+            //res.json({ error: 0, data })
+            res.json({ success: "true" })
+        }else{
+            res.status(409).json({ success: "false", errorCode: "1002", message: "user doesn't exists!" })
+        }
     } catch (error) {
         console.log(error, "-----------------")
         res.status(500).json({ success: "false", data: error })
@@ -96,21 +97,21 @@ const deleteUser = async (req, res) => {
 
 const userById = async (req, res) => {
     try {
-        let userData = await models.user.findOne({ _id: req.params.userId }).select("_id mobileNo name password createdAt updatedAt")
+        let userData = await models.user.findOne({ _id: req.params.userId }).select("_id username name password createdAt updatedAt")
         res.json({ error: 0, data: userData })
     } catch (error) {
         console.log(error, "-----------------")
-        res.status(500).json({ error: 1, data: error })
+        res.status(500).json({ success: "false", data: error })
     }
 }
 
 const listUsers = async (req, res) => {
     try {
-        let userData = await models.user.find({}).select("_id mobileNo name password createdAt updatedAt")
+        let userData = await models.user.find({}).select("_id username name password createdAt updatedAt")
         res.json({ error: 0, data: userData })
     } catch (error) {
         console.log(error, "-----------------")
-        res.status(500).json({ error: 1, data: error })
+        res.status(500).json({ success: "false", data: error })
     }
 }
 

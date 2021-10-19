@@ -7,15 +7,9 @@ var logger = require('morgan');
 var cors = require('cors')
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var videoRouter = require('./routes/video');
-var s3 = require('./routes/s3');
-var courses = require('./routes/courses');
-var content = require('./routes/content');
-var comments = require('./routes/comments');
-var trainer = require('./routes/trainer');
-var videoBank = require('./routes/videoBank');
-var file = require('./routes/file');
+var adminRouter = require('./routes/admin');
+var appUserRouter = require('./routes/appUser');
+
 
 let db = require('./db');
 
@@ -132,15 +126,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/videos', videoRouter);
-app.use('/s3', s3);
-app.use('/courses', courses);
-app.use('/content', content);
-app.use('/comments', comments);
-app.use('/trainer', trainer);
-app.use('/videoBank', videoBank);
-app.use('/files', file);
+app.use('/admin', usersRouter);
+app.use('/appUser', appUserRouter);
 
 app.use('/status', (req, res, next)=>{
   return res.send({
