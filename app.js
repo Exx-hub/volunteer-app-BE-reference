@@ -8,7 +8,7 @@ var cors = require('cors')
 
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
-var appUserRouter = require('./routes/appUser');
+var userRouter = require('./routes/user');
 
 
 let db = require('./db');
@@ -127,7 +127,7 @@ app.use(cors())
 
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
-app.use('/appUser', appUserRouter);
+app.use('/user', userRouter);
 
 app.use('/status', (req, res, next)=>{
   return res.send({

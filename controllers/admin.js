@@ -10,14 +10,15 @@ let s3 = new AWS.S3({
 });
 
 const addUser = async (req, res) => {
+    console.log(req.body);
     try {
-        let userExist = await models.user.findOne({ username: req.body.username })
+        let userExist = await models.admin.findOne({ username: req.body.username })
         let encryptedPassword = await bcrypt.hash(req.body.password, parseInt(process.env.saltRounds))
         //let token = jwt.sign({ _id: data._id }, process.env.jwtSecret, new Date());
         if (!userExist) {
             req.body.name = req.body.firstName + ' ' + req.body.lastName;
             req.body.password = encryptedPassword;
-            let data = await models.user.create(req.body)
+            let data = await models.admin.create(req.body)
             res.json({
                 success: "true",
                 data: data
@@ -34,7 +35,7 @@ const addUser = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        let data = await models.user.findOne({
+        let data = await models.admin.findOne({
             username: req.body.username,
         }, {
             "_id": 1,
@@ -62,12 +63,12 @@ const login = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        let userExist = await models.user.findOne({ username: req.body.username })
+        let userExist = await models.admin.findOne({ username: req.body.username })
         let encryptedPassword = await bcrypt.hash(req.body.password, parseInt(process.env.saltRounds))
         if (userExist) {
             req.body.name = req.body.firstName + ' ' + req.body.lastName;
             req.body.password = encryptedPassword;
-            let data = await models.user.update({ _id: req.params.userId }, req.body)
+            let data = await models.admin.update({ _id: req.params.userId }, req.body)
             res.json({ success: "true", data })
         } else {
             res.status(409).json({ success: "false", errorCode: "1002", message: "user doesn't exists!" })
@@ -80,9 +81,9 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        let userExist = await models.user.findOne({ username: req.body.username })
+        let userExist = await models.admin.findOne({ username: req.body.username })
         if (userExist) {
-            let data = await models.user.deleteOne({ _id: req.params.userId })
+            let data = await models.admin.deleteOne({ _id: req.params.userId })
             //res.json({ error: 0, data })
             res.json({ success: "true" })
         }else{
@@ -96,7 +97,7 @@ const deleteUser = async (req, res) => {
 
 const userById = async (req, res) => {
     try {
-        let userData = await models.user.findOne({ _id: req.params.userId }).select("_id username name password createdAt updatedAt")
+        let userData = await models.admin.findOne({ _id: req.params.userId }).select("_id username name password createdAt updatedAt")
         res.json({ error: 0, data: userData })
     } catch (error) {
         console.log(error, "-----------------")
@@ -106,7 +107,7 @@ const userById = async (req, res) => {
 
 const listUsers = async (req, res) => {
     try {
-        let userData = await models.user.find({}).select("_id username name password createdAt updatedAt")
+        let userData = await models.admin.find({}).select("_id username name password createdAt updatedAt")
         res.json({ error: 0, data: userData })
     } catch (error) {
         console.log(error, "-----------------")

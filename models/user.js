@@ -1,7 +1,7 @@
 var mongoose = require("mongoose")
 const { Schema } = mongoose;
 
-const appUserSchema = new Schema({
+const userSchema = new Schema({
     mobileNo: Number,
     name: String,
     firstName: String,
@@ -30,6 +30,6 @@ const appUserSchema = new Schema({
     timestamps: true
 });
 
-const appUser = mongoose.model('appUser', appUserSchema);
+const user = mongoose.model('user', userSchema);
 
-module.exports = appUser;
+module.exports = user;
