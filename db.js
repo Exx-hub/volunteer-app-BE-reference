@@ -11,7 +11,7 @@ let conn  = db.once('open', function () {
     return "success"
 });
 
-let conn  = db.once('close', function () {
+conn  = db.once('close', function () {
     console.log("Disconnected to DB")
     return "success"
 });

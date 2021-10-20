@@ -126,7 +126,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 
 app.use('/', indexRouter);
-app.use('/admin', usersRouter);
+app.use('/admin', adminRouter);
 app.use('/appUser', appUserRouter);
 
 app.use('/status', (req, res, next)=>{

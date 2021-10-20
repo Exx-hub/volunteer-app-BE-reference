@@ -67,7 +67,6 @@ const updateUser = async (req, res) => {
         if (userExist) {
             req.body.name = req.body.firstName + ' ' + req.body.lastName;
             req.body.password = encryptedPassword;
-            let data = await models.user.create(req.body)
             let data = await models.user.update({ _id: req.params.userId }, req.body)
             res.json({ success: "true", data })
         } else {
