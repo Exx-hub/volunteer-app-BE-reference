@@ -10,7 +10,6 @@ let s3 = new AWS.S3({
 });
 
 const addUser = async (req, res) => {
-    console.log(req.body);
     try {
         let userExist = await models.admin.findOne({ username: req.body.username })
         let encryptedPassword = await bcrypt.hash(req.body.password, parseInt(process.env.saltRounds))

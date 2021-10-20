@@ -1,7 +1,7 @@
 {
   "name": "volunteer-app",
   "version": "1.0.0",
-  "private": true,
+  "private": true, 
   "scripts": {
     "prestart": "npm install",
     "start": "NODE_ENV=production node app.js",
