@@ -2,9 +2,18 @@ var mongoose = require("mongoose")
 const { Schema } = mongoose;
 
 const regionSchema = new Schema({
-    region: String
+    'region':{
+        'type': String,
+        'required': true
+    },
+    'description':{
+        'type': String,
+        'required': false
+    }
 }, {
-    timestamps: true
+    'versionKey': false,
+    'timestamps': true,
+    'autoIndex': true
 });
 
 const region = mongoose.model('region', regionSchema);
