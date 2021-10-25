@@ -2,27 +2,44 @@ var mongoose = require("mongoose")
 const { Schema } = mongoose;
 
 const adminSchema = new Schema({
-    username: String,
-    name: String,
-    firstName: String,
-    lastName: String,
-    password: String,
-    sessionInfo: {
-        deviceId: {
-          type: String
+    'username': {
+      'type': String, 
+      'required': true
+    },
+    'fullName': {
+      'type': String,
+      'required': true
+    },
+    'firstName': {
+      'type': String,
+      'required': true
+    },
+    'lastName': {
+      'type': String,
+      'required': true
+    },
+    'password': {
+      'type': String, 
+      'required': true
+    },
+    'sessionInfo': {
+        'deviceId': {
+          'type': String
         },
-        deviceType: {
-          type: Number
+        'deviceType': {
+          'type': Number
         },
-        token: {
-          type: String
+        'token': {
+          'type': String
         },
-        destroyTime: {
-          type: Date
+        'destroyTime': {
+          'type': Date
         }
       }
 }, {
-    timestamps: true
+  'versionKey': false,
+  'timestamps': true,
+  'autoIndex': true
 });
 
 const admin = mongoose.model('admin', adminSchema);

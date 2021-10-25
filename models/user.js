@@ -2,32 +2,72 @@ var mongoose = require("mongoose")
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    mobileNo: Number,
-    name: String,
-    firstName: String,
-    lastName: String,
-    address: String,
-    gender: String,
-    birthDate: Date,
-    email: String,
-    regionId: mongoose.Schema.Types.ObjectId,
-    municipalityId: mongoose.Schema.Types.ObjectId,
-    sessionInfo: {
-        deviceId: {
-          type: String
-        },
-        deviceType: {
-          type: Number
-        },
-        token: {
-          type: String
-        },
-        destroyTime: {
-          type: Date
-        }
+    'mobileNo': {
+      'type': Number, 
+      'required': true
+    },
+    'fullName': {
+      'type': String,
+      'required': true
+    },
+    'firstName': {
+      'type': String,
+      'required': true
+    },
+    'lastName': {
+      'type': String,
+      'required': true
+    },
+    'password': {
+      'type': String, 
+      'required': true
+    },
+    'address': {
+      'type': String,
+      'required': true
+    },
+    'gender': {
+      'type': String,
+      'required': true
+    },
+    'birthDate': {
+      'type': Date,
+      'required': true
+    },
+    'email': {
+      'type': String,
+      'required': false
+    },
+    'regionId': {
+      'type': mongoose.Schema.Types.ObjectId,
+      'required': true
+    },
+    'municipalityId': {
+      'type': mongoose.Schema.Types.ObjectId,
+      'required': true
+    },
+    'otp': {
+      'code': String,
+      'timeout': Date
+    },
+    'sessionInfo': {
+      'deviceId': {
+        'type': String
+      },
+      'deviceType': {
+        'type': Number
+      },
+      'token': {
+        'type': String
+      },
+      'destroyTime': {
+        'type': Date
       }
+    }
 }, {
-    timestamps: true
+  'versionKey': false,
+  'timestamps': true,
+  'autoIndex': true
 });
 
 const user = mongoose.model('user', userSchema);

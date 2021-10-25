@@ -2,12 +2,14 @@ let models = require("../models")
 let bcrypt = require("bcrypt")
 var jwt = require('jsonwebtoken');
 let AWS = require('aws-sdk');
-const stripe = require('stripe')(process.env.stripeSK);
+const Puid = require('puid');
+const { update } = require("../models/admin");
 let s3 = new AWS.S3({
     region: process.env.region,
     "accessKeyId": process.env.accessKeyId,
     "secretAccessKey": process.env.secretAccessKey
 });
+let puid = new Puid();
 
 const addUser = async (req, res) => {
     try {
@@ -15,7 +17,7 @@ const addUser = async (req, res) => {
         let encryptedPassword = await bcrypt.hash(req.body.password, parseInt(process.env.saltRounds))
         //let token = jwt.sign({ _id: data._id }, process.env.jwtSecret, new Date());
         if (!userExist) {
-            req.body.name = req.body.firstName + ' ' + req.body.lastName;
+            req.body.fullName = req.body.firstName + ' ' + req.body.lastName;
             req.body.password = encryptedPassword;
             let data = await models.admin.create(req.body)
             res.json({
@@ -39,13 +41,16 @@ const login = async (req, res) => {
         }, {
             "_id": 1,
             "username": 1,
-            "name": 1,
+            "fullName": 1,
             "password": 1
         }).lean();
         let comp = await bcrypt.compare(req.body.password, data.password);
         if (data && comp) {
             delete data.password;
-            //let token = jwt.sign({ _id: data._id }, process.env.jwtSecret, new Date());
+            //let token = jwt.sign({ _id: data._id }, process.env.jwtSecret, { expiresIn: 60 * 60 });
+            let token = puid.generate();
+            let updateData = await models.admin.updateOne({_id:data._id},{$set:{'sessionInfo.token':token}});
+            data.token = token;
             res.json({
                 status: 1,
                 message: "success",
@@ -62,10 +67,10 @@ const login = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        let userExist = await models.admin.findOne({ username: req.body.username })
+        let userExist = await models.admin.findOne({ _id: req.params.userId })
         let encryptedPassword = await bcrypt.hash(req.body.password, parseInt(process.env.saltRounds))
         if (userExist) {
-            req.body.name = req.body.firstName + ' ' + req.body.lastName;
+            req.body.fullName = req.body.firstName + ' ' + req.body.lastName;
             req.body.password = encryptedPassword;
             let data = await models.admin.update({ _id: req.params.userId }, req.body)
             res.json({ success: "true", data })
@@ -80,7 +85,7 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        let userExist = await models.admin.findOne({ username: req.body.username })
+        let userExist = await models.admin.findOne({ _id: req.params.userId })
         if (userExist) {
             let data = await models.admin.deleteOne({ _id: req.params.userId })
             //res.json({ error: 0, data })
@@ -96,7 +101,7 @@ const deleteUser = async (req, res) => {
 
 const userById = async (req, res) => {
     try {
-        let userData = await models.admin.findOne({ _id: req.params.userId }).select("_id username name password createdAt updatedAt")
+        let userData = await models.admin.findOne({ _id: req.params.userId }).select("_id username fullName password createdAt updatedAt")
         res.json({ error: 0, data: userData })
     } catch (error) {
         console.log(error, "-----------------")
@@ -106,7 +111,7 @@ const userById = async (req, res) => {
 
 const listUsers = async (req, res) => {
     try {
-        let userData = await models.admin.find({}).select("_id username name password createdAt updatedAt")
+        let userData = await models.admin.find({}).select("_id username fullName password createdAt updatedAt")
         res.json({ error: 0, data: userData })
     } catch (error) {
         console.log(error, "-----------------")
