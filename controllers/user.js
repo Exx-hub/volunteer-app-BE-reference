@@ -50,6 +50,7 @@ const login = async (req, res) => {
             let token = puid.generate();
             let updateData = await models.user.updateOne({_id:data._id},{$set:{'sessionInfo.token':token}});
             data.token = token;
+            
             res.json({
                 status: 1,
                 message: "success",
@@ -138,7 +139,7 @@ const signupRequestOTP = async (req, res) => {
             //send sms - otp
             let phone = '+63' + req.body.mobileNo;
             let _url = `${baseUrl}?username=${un}&password=${pwd}&mobilenum=${phone}&fullmesg=${otp_msg}&originator=${originator}`
-            //axios.get(_url).then(function(response){console.log(response.data);});
+            axios.get(_url).then(function(response){console.log(response.data);});
 
             res.json({ success: "true", otp: otp.code })
         }else{

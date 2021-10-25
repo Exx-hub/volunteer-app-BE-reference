@@ -10,7 +10,7 @@ var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 var userRouter = require('./routes/user');
 var regionRouter = require('./routes/region');
-
+var municipalityRouter = require('./routes/municipality');
 
 let db = require('./db');
 
@@ -130,6 +130,7 @@ app.use('/', indexRouter);
 app.use('/admin', adminRouter);
 app.use('/user', userRouter);
 app.use('/region', regionRouter);
+app.use('/municipality', municipalityRouter);
 
 app.use('/status', (req, res, next)=>{
   return res.send({

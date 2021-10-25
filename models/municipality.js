@@ -2,9 +2,18 @@ var mongoose = require("mongoose")
 const { Schema } = mongoose;
 
 const municipalitySchema = new Schema({
-    region: String
+    'municipality':{
+        'type': String,
+        'required': true
+    },
+    'regionId': {
+        'type': mongoose.Schema.Types.ObjectId,
+        'required': true
+    },
 }, {
-    timestamps: true
+    'versionKey': false,
+    'timestamps': true,
+    'autoIndex': true
 });
 
 const municipality = mongoose.model('municipality', municipalitySchema);
