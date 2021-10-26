@@ -198,8 +198,8 @@ const bulletinRegional = async (req, res) => {
 
 const listBulletin = async (req, res) => {
     try {
-        //let bulletinData = await models.bulletin.find({}).select("_id title description isRegional regionId createdAt updatedAt")
-        let bulletinData = await models.bulletin.aggregate([
+        let bulletinData = await models.bulletin.find({}).select("_id title description isRegional regionId createdAt updatedAt")
+        /*let bulletinData = await models.bulletin.aggregate([
             { 
               $lookup: {
                 from: "regions",
@@ -208,7 +208,11 @@ const listBulletin = async (req, res) => {
                 as: "region_info",
               },
             },
-            { $unwind: "$region_info" },
+            { $unwind: {
+                path: "$region_info",
+                preserveNullAndEmptyArrays: true
+              }
+            },
             {
               $project: {
                 _id: 1,
@@ -221,7 +225,7 @@ const listBulletin = async (req, res) => {
                 updatedAt: 1
               }
             }
-        ])
+        ])*/
         res.json({ success: "true", data: bulletinData })
     } catch (error) {
         console.log(error, "-----------------")
