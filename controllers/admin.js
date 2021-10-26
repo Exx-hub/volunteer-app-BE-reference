@@ -29,7 +29,7 @@ const addUser = async (req, res) => {
         }
     } catch (error) {
         console.log(error, "-----------------")
-        res.status(500).json({ error: 1, data: error })
+        res.status(500).json({ error: 1, success: "false", data: error })
     }
 
 }
@@ -52,8 +52,7 @@ const login = async (req, res) => {
             let updateData = await models.admin.updateOne({_id:data._id},{$set:{'sessionInfo.token':token}});
             data.token = token;
             res.json({
-                status: 1,
-                message: "success",
+                success: "true",
                 data: data
             })
         } else {
@@ -61,25 +60,32 @@ const login = async (req, res) => {
         }
     } catch (error) {
         console.log(error, "-----------------")
-        res.status(500).json({ error: 1, data: error })
+        res.status(500).json({ error: 1, success: "false", data: error })
     }
 }
 
 const updateUser = async (req, res) => {
     try {
         let userExist = await models.admin.findOne({ _id: req.params.userId })
-        let encryptedPassword = await bcrypt.hash(req.body.password, parseInt(process.env.saltRounds))
         if (userExist) {
-            req.body.fullName = req.body.firstName + ' ' + req.body.lastName;
-            req.body.password = encryptedPassword;
+            if(req.body.firstName || req.body.lastName){
+                req.body.fullName = req.body.firstName + ' ' + req.body.lastName;
+            }
+
+            if(req.body.password){
+                let encryptedPassword = await bcrypt.hash(req.body.password, parseInt(process.env.saltRounds))
+                req.body.password = encryptedPassword;
+            }
+
             let data = await models.admin.update({ _id: req.params.userId }, req.body)
-            res.json({ success: "true", data })
+            let userData = await models.admin.findOne({ _id: req.params.userId })
+            res.json({ success: "true", userData })
         } else {
             res.status(409).json({ success: "false", errorCode: "1002", message: "user doesn't exists!" })
         }
     } catch (error) {
         console.log(error, "-----------------")
-        res.status(500).json({ success: "false", data: error })
+        res.status(500).json({ error: 1, success: "false", data: error })
     }
 }
 
@@ -88,34 +94,33 @@ const deleteUser = async (req, res) => {
         let userExist = await models.admin.findOne({ _id: req.params.userId })
         if (userExist) {
             let data = await models.admin.deleteOne({ _id: req.params.userId })
-            //res.json({ error: 0, data })
             res.json({ success: "true" })
         }else{
             res.status(409).json({ success: "false", errorCode: "1002", message: "user doesn't exists!" })
         }
     } catch (error) {
         console.log(error, "-----------------")
-        res.status(500).json({ success: "false", data: error })
+        res.status(500).json({ error: 1, success: "false", data: error })
     }
 }
 
 const userById = async (req, res) => {
     try {
         let userData = await models.admin.findOne({ _id: req.params.userId }).select("_id username fullName password createdAt updatedAt")
-        res.json({ error: 0, data: userData })
+        res.json({ success: "true", data: userData })
     } catch (error) {
         console.log(error, "-----------------")
-        res.status(500).json({ success: "false", data: error })
+        res.status(500).json({ error: 1, success: "false", data: error })
     }
 }
 
 const listUsers = async (req, res) => {
     try {
         let userData = await models.admin.find({}).select("_id username fullName password createdAt updatedAt")
-        res.json({ error: 0, data: userData })
+        res.json({ success: "true", data: userData })
     } catch (error) {
         console.log(error, "-----------------")
-        res.status(500).json({ success: "false", data: error })
+        res.status(500).json({ error: 1, success: "false", data: error })
     }
 }
 

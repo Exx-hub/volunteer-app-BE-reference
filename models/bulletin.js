@@ -2,12 +2,30 @@ var mongoose = require("mongoose")
 const { Schema } = mongoose;
 
 const bulletinSchema = new Schema({
-    title: String,
-    description: String,
-    regionId: mongoose.Schema.Types.ObjectId,
-    municipalityId: mongoose.Schema.Types.ObjectId
+    'title': {
+        'type': String,
+        'required': true
+    },
+    'description': {
+        'type': String,
+        'required': true,
+    },
+    'isRegional': {
+        'type': Number,
+        'required': true
+    },
+    'regionId': {
+        'type': mongoose.Schema.Types.ObjectId,
+        'required': false
+    },
+    'municipalityId': {
+        'type': mongoose.Schema.Types.ObjectId,
+        'required': false
+    }
 }, {
-    timestamps: true
+    'versionKey': false,
+    'timestamps': true,
+    'autoIndex': true
 });
 
 const bulletin = mongoose.model('bulletin', bulletinSchema);

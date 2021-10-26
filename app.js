@@ -11,6 +11,9 @@ var adminRouter = require('./routes/admin');
 var userRouter = require('./routes/user');
 var regionRouter = require('./routes/region');
 var municipalityRouter = require('./routes/municipality');
+var newsRouter = require('./routes/news');
+var bulletinRouter = require('./routes/bulletin');
+var aboutRouter = require('./routes/about');
 
 let db = require('./db');
 
@@ -131,6 +134,9 @@ app.use('/admin', adminRouter);
 app.use('/user', userRouter);
 app.use('/region', regionRouter);
 app.use('/municipality', municipalityRouter);
+app.use('/news', newsRouter);
+app.use('/bulletin', bulletinRouter);
+app.use('/about', aboutRouter);
 
 app.use('/status', (req, res, next)=>{
   return res.send({

@@ -2,10 +2,18 @@ var mongoose = require("mongoose")
 const { Schema } = mongoose;
 
 const aboutSchema = new Schema({
-    details: String,
-    sort: Number
+    'details': {
+        'type': String,
+        'required': true
+    },
+    'sort': {
+        'type': Number,
+        'required': false
+    }
 }, {
-    timestamps: true
+    'versionKey': false,
+    'timestamps': true,
+    'autoIndex': true
 });
 
 const about = mongoose.model('about', aboutSchema);
