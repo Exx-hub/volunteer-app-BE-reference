@@ -102,8 +102,8 @@ const municipalityById = async (req, res) => {
 
 const municipalityByRegionId = async (req, res) => {
     try {
-        //let municipalityData = await models.municipality.find({ regionId: req.params.regionId }).select("_id regionId municipality createdAt updatedAt")
-        let municipalityData = await models.municipality.aggregate([
+        let municipalityData = await models.municipality.find({ regionId: req.params.regionId }).select("_id regionId municipality createdAt updatedAt")
+        /*let municipalityData = await models.municipality.aggregate([
             { 
               $lookup: {
                 from: "regions",
@@ -124,7 +124,7 @@ const municipalityByRegionId = async (req, res) => {
                 updatedAt: 1
               }
             }
-        ])
+        ])*/
         res.json({ success: "true", data: municipalityData })
     } catch (error) {
         console.log(error, "-----------------")

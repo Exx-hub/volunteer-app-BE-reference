@@ -120,8 +120,8 @@ const bulletinById = async (req, res) => {
 
 const bulletinByRegionId = async (req, res) => {
     try {
-        //let bulletinData = await models.bulletin.find({ regionId: req.params.regionId }).select("_id title description isRegional regionId createdAt updatedAt")
-        let bulletinData = await models.bulletin.aggregate([
+        let bulletinData = await models.bulletin.find({ regionId: req.params.regionId }).select("_id title description isRegional regionId createdAt updatedAt")
+        /*let bulletinData = await models.bulletin.aggregate([
             { 
               $lookup: {
                 from: "regions",
@@ -144,7 +144,7 @@ const bulletinByRegionId = async (req, res) => {
                 updatedAt: 1
               }
             }
-        ])
+        ])*/
         res.json({ success: "true", data: bulletinData })
     } catch (error) {
         console.log(error, "-----------------")

@@ -114,8 +114,8 @@ const newsById = async (req, res) => {
 
 const newsByRegionId = async (req, res) => {
     try {
-        //let newsData = await models.news.find({ regionId: req.params.regionId }).select("_id headline description regionId municipalityId createdAt updatedAt")
-        let newsData = await models.news.aggregate([
+        let newsData = await models.news.find({ regionId: req.params.regionId }).select("_id headline description regionId municipalityId createdAt updatedAt")
+        /*let newsData = await models.news.aggregate([
             { 
               $lookup: {
                 from: "regions",
@@ -148,7 +148,7 @@ const newsByRegionId = async (req, res) => {
                 updatedAt: 1
               }
             }
-        ])
+        ])*/
         res.json({ success: "true", data: newsData })
     } catch (error) {
         console.log(error, "-----------------")
@@ -158,8 +158,8 @@ const newsByRegionId = async (req, res) => {
 
 const newsByMunicipalityId = async (req, res) => {
     try {
-        //let newsData = await models.news.find({ municipalityId: req.params.municipalityId }).select("_id headline description regionId municipalityId createdAt updatedAt")
-        let newsData = await models.news.aggregate([
+        let newsData = await models.news.find({ municipalityId: req.params.municipalityId }).select("_id headline description regionId municipalityId createdAt updatedAt")
+        /*let newsData = await models.news.aggregate([
             { 
               $lookup: {
                 from: "regions",
@@ -192,7 +192,7 @@ const newsByMunicipalityId = async (req, res) => {
                 updatedAt: 1
               }
             }
-        ])
+        ])*/
         res.json({ success: "true", data: newsData })
     } catch (error) {
         console.log(error, "-----------------")
