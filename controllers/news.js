@@ -243,6 +243,54 @@ const listNews = async (req, res) => {
     }
 }
 
+const searchNews = async (req, res) => {
+    try{
+        const _search = req.query.search || undefined;
+        let _toFind = { '$or': [
+            { "headline": {$regex: _search, $options: "i"} }
+        ]}
+    
+        let newsData = await models.news.aggregate([
+          { 
+            $lookup: {
+                from: "regions",
+                localField: "regionId",
+                foreignField: "_id",
+                as: "region_info",
+            },
+          },
+          { $unwind: "$region_info" },
+            { 
+                $lookup: {
+                from: "municipalities",
+                localField: "municipalityId",
+                foreignField: "_id",
+                as: "municipality_info",
+                },
+            },
+          { $unwind: "$municipality_info" },
+          { $match: _toFind },
+          {
+            $project: {
+                _id: 1,
+                headline: 1,
+                description: 1,
+                regionId: 1,
+                region: "$region_info.region",
+                municipalityId: 1,
+                municipality: "$municipality_info.municipality",
+                createdAt: 1,
+                updatedAt: 1
+            }
+          }
+        ])
+        res.json({ success: "true", data: newsData})
+
+    }catch(error){
+      console.log('error',error);
+    }
+}
+
 module.exports = {
     addNews,
     updateNews,
@@ -250,5 +298,6 @@ module.exports = {
     newsById,
     newsByRegionId,
     newsByMunicipalityId,
-    listNews
+    listNews,
+    searchNews
 }

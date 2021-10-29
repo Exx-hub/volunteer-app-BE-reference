@@ -18,4 +18,6 @@ router.get('/bulletinByRegionId/:regionId', bulletinController.bulletinByRegionI
 
 router.get('/', bulletinController.listBulletin);
 
+router.get('/search', bulletinController.searchBulletin);
+
 module.exports = router;

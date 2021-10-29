@@ -16,4 +16,6 @@ router.get('/newsByMunicipalityId/:municipalityId', newsController.newsByMunicip
 
 router.get('/', newsController.listNews);
 
+router.get('/search', newsController.searchNews);
+
 module.exports = router;

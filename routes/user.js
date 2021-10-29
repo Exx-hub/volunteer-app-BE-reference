@@ -18,6 +18,8 @@ router.get('/userById/:userId', userController.userById);
 
 router.get('/', userController.listUsers);
 
+router.get('/search', userController.searchUser);
+
 router.post('/forgot-password/request-otp', userController.forgotPassRequestOTP);
 
 router.post('/forgot-password/verify-otp', userController.forgotPassVerifyOTP);

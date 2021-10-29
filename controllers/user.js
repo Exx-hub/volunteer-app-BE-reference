@@ -350,6 +350,64 @@ const forgotPassVerifyOTP = async (req, res) => {
     }
 }
 
+const searchUser = async (req, res) => {
+    try{
+        const _search = req.query.search || undefined;
+        let _toFind = { '$or': [
+            { "firstName": {$regex: _search, $options: "i"} },
+            { "lastName": {$regex: _search, $options: "i"} },
+            { "mobileNo": {$regex: _search, $options: "i"} },
+        ]}
+    
+        /*let userData = await models.user.find({'$or': [{ "firstName": _search }, { "lastName": _search }, { "mobileNo": _search }] });*/
+
+        let userData = await models.user.aggregate([
+          { 
+            $lookup: {
+                from: "regions",
+                localField: "regionId",
+                foreignField: "_id",
+                as: "region_info",
+            },
+          },
+          { $unwind: "$region_info" },
+            { 
+                $lookup: {
+                from: "municipalities",
+                localField: "municipalityId",
+                foreignField: "_id",
+                as: "municipality_info",
+                },
+            },
+          { $unwind: "$municipality_info" },
+          { $match: _toFind },
+          {
+            $project: {
+                _id: 1,
+                mobileNo: 1,
+                fullName: 1,
+                firstName: 1,
+                lastName: 1,
+                password: 1,
+                address: 1,
+                gender: 1,
+                birthDate: 1,
+                regionId: 1,
+                region: "$region_info.region",
+                municipalityId: 1,
+                municipality: "$municipality_info.municipality",
+                createdAt: 1,
+                updatedAt: 1
+            }
+          }
+        ])
+        res.json({ success: "true", data: userData})
+
+    }catch(error){
+      console.log('error',error);
+    }
+}
+
 module.exports = {
     createUser,
     login,
@@ -361,5 +419,6 @@ module.exports = {
     signupVerifyOTP,
     generateOTP,
     forgotPassRequestOTP,
-    forgotPassVerifyOTP
+    forgotPassVerifyOTP,
+    searchUser
 }

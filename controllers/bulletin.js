@@ -233,6 +233,46 @@ const listBulletin = async (req, res) => {
     }
 }
 
+const searchBulletin = async (req, res) => {
+    try{
+        const _search = req.query.search || undefined;
+        let _toFind = { '$or': [
+            { "title": {$regex: _search, $options: "i"} },
+        ]}
+
+        console.log(_search);
+    
+        let bulletinData = await models.bulletin.aggregate([
+          { 
+            $lookup: {
+                from: "regions",
+                localField: "regionId",
+                foreignField: "_id",
+                as: "region_info",
+            },
+          },
+          { $unwind: "$region_info" },
+          { $match: _toFind },
+          {
+            $project: {
+                _id: 1,
+                title: 1,
+                description: 1,
+                isRegional: 1,
+                regionId: 1,
+                region: "$region_info.region",
+                createdAt: 1,
+                updatedAt: 1
+            }
+          }
+        ])
+        res.json({ success: "true", data: bulletinData})
+
+    }catch(error){
+      console.log('error',error);
+    }
+}
+
 module.exports = {
     addBulletin,
     updateBulletin,
@@ -241,5 +281,6 @@ module.exports = {
     bulletinByRegionId,
     bulletinNationwide,
     bulletinRegional,
-    listBulletin
+    listBulletin,
+    searchBulletin
 }
