@@ -243,7 +243,7 @@ const searchBulletin = async (req, res) => {
         console.log(_search);
     
         let bulletinData = await models.bulletin.aggregate([
-          { 
+          /*{ 
             $lookup: {
                 from: "regions",
                 localField: "regionId",
@@ -251,7 +251,7 @@ const searchBulletin = async (req, res) => {
                 as: "region_info",
             },
           },
-          { $unwind: "$region_info" },
+          { $unwind: "$region_info" },*/
           { $match: _toFind },
           {
             $project: {
